@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import surveyRoutes from './routes/survey'
+import { connectToMongoDb } from '../config/db'
 
 dotenv.config()
 
@@ -15,4 +16,5 @@ app.use('/api/v1/survey', surveyRoutes())
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started at: ${process.env.PORT}`)
+  connectToMongoDb()
 })
