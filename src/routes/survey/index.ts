@@ -1,21 +1,9 @@
 import express from 'express'
-import { createSurvey, getSurveys, getSurveysByUser, removeSurvey, updateSurvey } from './services'
+import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveysById, getSurveysByUser, removeSurvey, updateSurvey } from './services'
 
 const router = express.Router()
 
 const surveyRoutes = () => {
-
-  // SURVEY
-  // -- GET /
-  // GET /:surveyId
-  // GET /user/:userId
-  // -- POST /
-  // -- PATCH /:surveyId
-  // --- DELETE /:surveyId
-
-  // QUESTIONS
-  // GET /:surveyId/questions
-  // POST /:surveyId/questions
 
   // ANSWERS
   // GET /survey/:surveyId/summary - gets summary of the survey
@@ -26,9 +14,25 @@ const surveyRoutes = () => {
   
   // POST /:surveyId/answers
 
+  /**
+   * SURVEY ROUTES
+   */
+
   router.get('/', async (req, res) => {
     try {
       const surveys = await getSurveys()
+
+      res.status(200).json(surveys)
+      
+    } catch (error) {
+      throw error
+    }
+  })
+
+  router.get('/:surveyId', async (req, res) => {
+    try {
+      const { surveyId } = req.params
+      const surveys = await getSurveysById(surveyId)
 
       res.status(200).json(surveys)
       
@@ -85,6 +89,31 @@ const surveyRoutes = () => {
     }
   })
 
+  /** 
+   * SURVEY FIELDS ROUTES 
+   */
+
+  router.get('/:surveyId/fields', async (req, res) => {
+    try {
+      const { surveyId } = req.params
+      const fields = await getSurveyFields(surveyId)
+
+      res.status(200).json()
+    } catch (error) {
+      throw error
+    }
+  })
+
+  router.post('/:surveyId/fields', async (req, res) => {
+    try {
+      const { surveyId } = req.params
+      const newFieldsStatus = await createSurveyFields(surveyId, req.body)
+
+      res.status(200).json(newFieldsStatus)
+    } catch (error) {
+      throw error
+    }
+  })
 
   return router
 }

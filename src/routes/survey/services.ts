@@ -1,9 +1,21 @@
 import { v4 as uuid } from 'uuid'
-import SurveyModel from '../../../models/Survey'
+import { 
+  SurveyModel,
+  SurveyFieldsModal
+} from '../../../models/Survey'
 import { Survey } from '../../types/survey'
+
+/**
+ * SURVEY 
+ */
 
 export const getSurveys = async () => {
   const surveys = await SurveyModel.find()
+  return surveys
+}
+
+export const getSurveysById = async (surveyId:string) => {
+  const surveys = await SurveyModel.find({surveyId})
   return surveys
 }
 
@@ -38,4 +50,18 @@ export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
 export const removeSurvey = async (surveyId: string) => {
   const surveys = await SurveyModel.findOneAndRemove({id: surveyId})
   return surveys
+}
+
+/** 
+ * SURVEY FIELDS 
+ */
+
+export const getSurveyFields = async (surveyId: string) => {
+  const surveys = await SurveyFieldsModal.find({id: surveyId})
+  return surveys
+}
+
+export const createSurveyFields = async (surveyId: string, fields: any) => {
+  console.log("Create survey fields", surveyId, fields)
+  return true
 }
