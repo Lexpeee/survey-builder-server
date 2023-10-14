@@ -14,7 +14,7 @@ const SurveySchema = new mongoose.Schema({
   isVisible: Boolean
 })
 
-export const SurveyModel = mongoose.model('Survey', SurveySchema)
+export const SurveyModel = mongoose.model('surveys', SurveySchema)
 
 const SurveyFieldsSchema = new mongoose.Schema({
   id: String, 
@@ -33,4 +33,4 @@ const SurveyFieldsSchema = new mongoose.Schema({
   isFieldLocked: Boolean
 })
 
-export const SurveyFieldsModal = mongoose.model('SurveyFields', SurveyFieldsSchema)
+export const SurveyFieldsModal = mongoose.model('survey-fields', SurveyFieldsSchema)
