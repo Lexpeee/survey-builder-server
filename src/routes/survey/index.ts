@@ -1,5 +1,5 @@
 import express from 'express'
-import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveysById, getSurveysByUser, removeSurvey, updateSurvey } from './services'
+import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveysById, getSurveysByUser, removeSurvey, seedSurveys, updateSurvey } from './services'
 
 const router = express.Router()
 
@@ -17,6 +17,17 @@ const surveyRoutes = () => {
   /**
    * SURVEY ROUTES
    */
+
+  router.get('/seed', async (req, res) => {
+    try {
+      await seedSurveys()
+      res.status(200).json({
+        success: ["Created sample forms to the database"]
+      })
+    } catch (error) {
+      throw error
+    }
+  })
 
   router.get('/', async (req, res) => {
     try {

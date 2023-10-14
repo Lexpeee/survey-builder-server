@@ -4,10 +4,17 @@ import {
   SurveyFieldsModal
 } from '../../../models/Survey'
 import { Survey } from '../../types/survey'
+import { SAMPLE_FORMS } from '../../helpers/constants'
 
 /**
  * SURVEY 
  */
+
+export const seedSurveys = async () => {
+  SAMPLE_FORMS.forEach(async (form) => {
+    await SurveyModel.create(form)
+  })
+}
 
 export const getSurveys = async () => {
   const surveys = await SurveyModel.find()
