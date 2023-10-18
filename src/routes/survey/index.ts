@@ -43,9 +43,8 @@ const surveyRoutes = () => {
   router.get('/:surveyId', async (req, res) => {
     try {
       const { surveyId } = req.params
-      const surveys = await getSurveysById(surveyId)
-
-      res.status(200).json(surveys)
+      const survey = await getSurveysById(surveyId)
+      res.status(200).json(survey)
       
     } catch (error) {
       throw error
@@ -54,7 +53,8 @@ const surveyRoutes = () => {
 
   router.get('/user/:userId', async (req, res) => {
     try {
-      const surveys = await getSurveysByUser(req.body)
+      const { userId } = req.params
+      const surveys = await getSurveysByUser(userId)
 
       res.status(200).json(surveys)
       

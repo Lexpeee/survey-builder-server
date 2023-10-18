@@ -11,6 +11,7 @@ export type SurveyOptions = {
 
 export type SurveyFields = {
   id: string
+  surveyId: string
   order: number
   question: string // this can also contain a message for a survey if type is set to message
   answer?: string

@@ -33,4 +33,4 @@ const SurveyFieldsSchema = new mongoose.Schema({
   isFieldLocked: Boolean
 })
 
-export const SurveyFieldsModal = mongoose.model('survey-fields', SurveyFieldsSchema)
+export const SurveyFieldsModel = mongoose.model('survey-fields', SurveyFieldsSchema)

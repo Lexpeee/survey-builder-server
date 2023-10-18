@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid'
+import { omit } from "lodash";
 import { 
   SurveyModel,
-  SurveyFieldsModal
+  SurveyFieldsModel
 } from '../../../models/Survey'
 import { Survey } from '../../types/survey'
 import { SAMPLE_FORMS } from '../../helpers/constants'
@@ -22,12 +23,12 @@ export const getSurveys = async () => {
 }
 
 export const getSurveysById = async (surveyId:string) => {
-  const surveys = await SurveyModel.find({surveyId})
+  const surveys = await SurveyModel.findOne({id: surveyId}).exec()
   return surveys
 }
 
 export const getSurveysByUser = async (userId:string) => {
-  const surveys = await SurveyModel.find({userId})
+  const surveys = await SurveyModel.find({userId: userId}).exec()
   return surveys
 }
 
@@ -37,13 +38,38 @@ export const getSurveyDetails = async (surveyId: string) => {
 }
 
 export const createSurvey = async (data:Partial<Survey>) => {
-  let newSurvey = {
-    id: uuid(),
-    ...data,
-    dateCreated: new Date().toISOString()
+  try {
+
+    const { 
+      name, 
+      options, 
+      displayImages, 
+      isVisible, 
+      userId, 
+      fields
+    } = data
+    let newSurvey = {
+      id: uuid(),
+      userId, 
+      name, 
+      options, 
+      displayImages, 
+      isVisible, 
+      dateCreated: new Date().toISOString()
+    }
+    const survey = await SurveyModel.create(newSurvey)
+    if (survey?.id) {
+      const insertedFields = await SurveyFieldsModel.insertMany(fields)
+      return {
+        ...survey,
+        surveyId: survey?.id,
+        insertedFields
+      }
+    }
+
+  } catch (error) {
+    return error
   }
-  const surveys = await SurveyModel.create(newSurvey)
-  return surveys
 }
 
 export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
@@ -64,7 +90,7 @@ export const removeSurvey = async (surveyId: string) => {
  */
 
 export const getSurveyFields = async (surveyId: string) => {
-  const surveys = await SurveyFieldsModal.find({id: surveyId})
+  const surveys = await SurveyFieldsModel.find({id: surveyId})
   return surveys
 }
 
