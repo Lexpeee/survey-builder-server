@@ -76,9 +76,9 @@ const surveyRoutes = () => {
 
   router.patch('/:surveyId', async (req, res) => {
     try {
-      const { userId } = req.params
+      const { surveyId } = req.params
       
-      const newSurvey = await updateSurvey(userId, req.body)
+      const newSurvey = await updateSurvey(surveyId, req.body)
 
       res.status(200).json(newSurvey)
       

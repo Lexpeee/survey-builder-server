@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid'
-import { omit } from "lodash";
 import { 
   SurveyModel,
   SurveyFieldsModel
@@ -76,7 +75,7 @@ export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
   let updatedSurvey = {
     ...data
   }
-  const surveys = await SurveyModel.findOneAndUpdate({id: surveyId}, updatedSurvey)
+  const surveys = await SurveyModel.findOneAndUpdate({id: surveyId}, updatedSurvey).exec()
   return surveys
 }
 
