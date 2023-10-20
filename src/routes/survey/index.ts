@@ -1,5 +1,5 @@
 import express from 'express'
-import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveysById, getSurveysByUser, removeSurvey, seedSurveys, updateSurvey } from './services'
+import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveyById, getSurveysByUser, removeSurvey, seedSurveys, updateSurvey } from './services'
 
 const router = express.Router()
 
@@ -43,10 +43,10 @@ const surveyRoutes = () => {
   })
 
   /** Fetches survey details */
-  router.get('/:surveyId', async (req, res) => {
+  router.get('/:surveyIdOrSlug', async (req, res) => {
     try {
       const { surveyId } = req.params
-      const survey = await getSurveysById(surveyId)
+      const survey = await getSurveyById(surveyId)
       res.status(200).json(survey)
       
     } catch (error) {

@@ -24,8 +24,11 @@ export const getSurveys = async () => {
 }
 
 /** Fetches the survey details via survey id */
-export const getSurveysById = async (surveyId:string) => {
-  const surveys = await SurveyModel.findOne({id: surveyId}).exec()
+export const getSurveyById = async (surveyIdOrSlug:string) => {
+  const surveys = await SurveyModel.findOne({$or: [
+    { id: surveyIdOrSlug },
+    { slug: surveyIdOrSlug },
+  ]}).exec()
   return surveys
 }
 
@@ -51,6 +54,7 @@ export const createSurvey = async (data:Partial<Survey>) => {
       id: uuid(),
       userId, 
       name, 
+      slug: name.replace(/\s/g, '-'),
       options, 
       displayImages, 
       isVisible, 
@@ -61,7 +65,6 @@ export const createSurvey = async (data:Partial<Survey>) => {
       const insertedFields = await SurveyFieldsModel.insertMany(fields)
       return {
         ...survey,
-        slug: survey?.name.replace(' ', '-'),
         surveyId: survey?.id,
         insertedFields
       }
