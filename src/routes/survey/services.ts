@@ -61,6 +61,7 @@ export const createSurvey = async (data:Partial<Survey>) => {
       const insertedFields = await SurveyFieldsModel.insertMany(fields)
       return {
         ...survey,
+        slug: survey?.name.replace(' ', '-'),
         surveyId: survey?.id,
         insertedFields
       }

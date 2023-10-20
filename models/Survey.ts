@@ -5,6 +5,7 @@ const SurveySchema = new mongoose.Schema({
   id: String, 
   userId: String, 
   name: String, 
+  slug: String,
   fields: Array, 
   options: Object,
   datePublished: Date,
