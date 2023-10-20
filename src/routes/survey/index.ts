@@ -116,7 +116,7 @@ const surveyRoutes = () => {
       const { surveyId } = req.params
       const fields = await getSurveyFields(surveyId)
 
-      res.status(200).json()
+      res.status(200).json(fields)
     } catch (error) {
       throw error
     }
