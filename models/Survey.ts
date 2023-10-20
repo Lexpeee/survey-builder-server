@@ -20,6 +20,7 @@ export const SurveyModel = mongoose.model('surveys', SurveySchema)
 const SurveyFieldsSchema = new mongoose.Schema({
   id: String, 
   order: Number, 
+  surveyId: String, 
   question: String, 
   answer: String, 
   name: String, 

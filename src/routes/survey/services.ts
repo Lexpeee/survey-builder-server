@@ -3,7 +3,7 @@ import {
   SurveyModel,
   SurveyFieldsModel
 } from '../../../models/Survey'
-import { Survey } from '../../types/survey'
+import { Survey, SurveyFields } from '../../types/survey'
 import { SAMPLE_FORMS } from '../../helpers/constants'
 
 /**
@@ -25,17 +25,31 @@ export const getSurveys = async () => {
 
 /** Fetches the survey details via survey id */
 export const getSurveyById = async (surveyIdOrSlug:string) => {
-  const surveys = await SurveyModel.findOne({$or: [
-    { id: surveyIdOrSlug },
-    { slug: surveyIdOrSlug },
-  ]}).exec()
-  return surveys
+  try {
+    const survey = await SurveyModel.findOne({$or: [
+      { id: surveyIdOrSlug },
+      { slug: surveyIdOrSlug },
+    ]}).exec()
+    if (survey?.id){ 
+      const fields = getSurveyFields(survey?.id)
+      return {
+        ...survey,
+        fields
+      }
+    }
+  } catch (error) {
+    return error
+  }
 }
 
 /** Fetches the survey details created by the user*/
 export const getSurveysByUser = async (userId:string) => {
-  const surveys = await SurveyModel.find({userId: userId}).exec()
-  return surveys
+  try {
+    const list = await SurveyModel.find({userId: userId}).lean()
+    return list
+  } catch (error) {
+    throw error
+  }
 }
 
 /** Main service to create a survey */
@@ -62,7 +76,9 @@ export const createSurvey = async (data:Partial<Survey>) => {
     }
     const survey = await SurveyModel.create(newSurvey)
     if (survey?.id) {
-      const insertedFields = await SurveyFieldsModel.insertMany(fields)
+      
+      const insertedFields = await createSurveyFields(survey?.id, fields)
+      
       return {
         ...survey,
         surveyId: survey?.id,
@@ -77,11 +93,28 @@ export const createSurvey = async (data:Partial<Survey>) => {
 
 /** Updates the selected survey */
 export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
-  let updatedSurvey = {
-    ...data
+  try {
+    const {
+      name, 
+      options, 
+      displayImages,
+      isVisible,
+      fields
+    } = data
+    let updatedSurvey = {
+      name, 
+      slug: name.replace(/\s/g, '-'),
+      options, 
+      displayImages, 
+      isVisible, 
+    }
+    const surveys = await SurveyModel.findOneAndUpdate({id: surveyId}, updatedSurvey).exec()
+
+    return surveys
+
+  } catch (error) {
+    return error
   }
-  const surveys = await SurveyModel.findOneAndUpdate({id: surveyId}, updatedSurvey).exec()
-  return surveys
 }
 
 /** Removes the selected survey */
@@ -95,11 +128,62 @@ export const removeSurvey = async (surveyId: string) => {
  */
 
 export const getSurveyFields = async (surveyId: string) => {
-  const surveys = await SurveyFieldsModel.find({id: surveyId})
-  return surveys
+  try {
+    const fields = await SurveyFieldsModel.find({surveyId: surveyId})
+    return fields
+  } catch (error) {
+    throw error
+  }
 }
 
-export const createSurveyFields = async (surveyId: string, fields: any) => {
-  console.log("Create survey fields", surveyId, fields)
+export const createSurveyFields = async (surveyId: string, fields: SurveyFields[]) => {
+  try {
+    const newFields = fields.map(field => ({
+      ...field, 
+      surveyId: surveyId
+    }))
+    
+    if (newFields.length > 1) {
+      const fields = await SurveyFieldsModel.create(newFields)
+      return fields
+    }
+    return await SurveyFieldsModel.insertMany(newFields)
+  } catch (error) {
+    throw error
+  }
+}
+
+/** TODO: can be exported outside if this will be used in other functions */
+const updateSurveyFields = async (fields: any, isNew: boolean = false) => {
+  try {
+    if (!isNew) {
+      fields?.forEach((field) => {
+        const isExisting = SurveyFieldsModel.find({id: field?.id})
+        if (isExisting) {
+          SurveyFieldsModel.findOneAndUpdate({id: field?.id}, field).exec()
+          return
+        }
+        createSurveyFields(field?.surveyId, [field])
+        return
+      })
+      return fields
+    }
+    
+  
+    const insertedFields = await SurveyFieldsModel.insertMany(fields)
+    return insertedFields
+
+  } catch (error) {
+    return error
+  }
+}
+
+/**
+ * SURVEY ANSWERS
+ */
+
+export const submitSurvyeAnswers = async () => {
+  console.log("submit answers")
+  
   return true
 }
