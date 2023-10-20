@@ -3,8 +3,9 @@ import {
   SurveyModel,
   SurveyFieldsModel
 } from '../../../models/Survey'
-import { Survey, SurveyFields } from '../../types/survey'
+import { Survey, SurveyAnswers, SurveyFields } from '../../types/survey'
 import { SAMPLE_FORMS } from '../../helpers/constants'
+import { SurveyAnswersModel } from '../../../models/SurveyAnswers'
 
 /**
  * SURVEY 
@@ -184,8 +185,23 @@ const updateSurveyFields = async (fields: any, isNew: boolean = false) => {
  * SURVEY ANSWERS
  */
 
-export const submitSurvyeAnswers = async () => {
-  console.log("submit answers")
-  
-  return true
+export const submitSurveyAnswers = async (formData: Partial<SurveyAnswers>) => {
+  try {
+    const {
+      userId, 
+      surveyId,
+      answers
+    } = formData
+    
+    let data = {
+      id: uuid(),
+      userId, 
+      surveyId, 
+      answers
+    }
+
+    return await SurveyAnswersModel.insertMany(data)
+  } catch (error) {
+    return error
+  }
 }

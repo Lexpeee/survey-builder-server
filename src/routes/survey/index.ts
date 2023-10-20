@@ -1,5 +1,5 @@
 import express from 'express'
-import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveyById, getSurveysByUser, removeSurvey, seedSurveys, updateSurvey } from './services'
+import { createSurvey, createSurveyFields, getSurveyFields, getSurveys, getSurveyById, getSurveysByUser, removeSurvey, seedSurveys, updateSurvey, submitSurveyAnswers } from './services'
 
 const router = express.Router()
 
@@ -133,6 +133,24 @@ const surveyRoutes = () => {
     }
   })
 
+  /**
+   * SURVEY ANSWERS
+   */
+
+  router.post('/answers', async (req,res) => {
+    try {
+
+      await submitSurveyAnswers(req.body)
+      
+      res.status(200).json({
+        success: ["Survey submitted"]
+      })
+      
+    } catch (error) {
+      throw error
+    }
+  })
+  
   return router
 }
 

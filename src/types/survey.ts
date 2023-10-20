@@ -41,3 +41,11 @@ export type Survey = {
   isVisible: boolean
 
 }
+
+export type SurveyAnswers = {
+  id: string
+  surveyId: string
+  userId: string
+  answers: any
+  dateCreated: string
+}
