@@ -29,14 +29,16 @@ export const getSurveyById = async (surveyIdOrSlug:string) => {
     const survey = await SurveyModel.findOne({$or: [
       { id: surveyIdOrSlug },
       { slug: surveyIdOrSlug },
-    ]}).exec()
-    if (survey?.id){ 
-      const fields = getSurveyFields(survey?.id)
+    ]}).lean().exec()
+    if (survey?.id && survey?.fields?.length === 0){ 
+      const fields = await getSurveyFields(survey?.id)
+      
       return {
         ...survey,
         fields
       }
     }
+    return survey
   } catch (error) {
     return error
   }
@@ -129,7 +131,7 @@ export const removeSurvey = async (surveyId: string) => {
 
 export const getSurveyFields = async (surveyId: string) => {
   try {
-    const fields = await SurveyFieldsModel.find({surveyId: surveyId})
+    const fields = await SurveyFieldsModel.find({surveyId: surveyId}).lean()
     return fields
   } catch (error) {
     throw error

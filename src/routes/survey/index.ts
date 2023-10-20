@@ -45,8 +45,8 @@ const surveyRoutes = () => {
   /** Fetches survey details */
   router.get('/:surveyIdOrSlug', async (req, res) => {
     try {
-      const { surveyId } = req.params
-      const survey = await getSurveyById(surveyId)
+      const { surveyIdOrSlug } = req.params
+      const survey = await getSurveyById(surveyIdOrSlug)
       res.status(200).json(survey)
       
     } catch (error) {
