@@ -10,32 +10,32 @@ import { SAMPLE_FORMS } from '../../helpers/constants'
  * SURVEY 
  */
 
+/** Only used for development */
 export const seedSurveys = async () => {
   SAMPLE_FORMS.forEach(async (form) => {
     await SurveyModel.create(form)
   })
 }
 
+/** Fetches whole list of surveys */
 export const getSurveys = async () => {
   const surveys = await SurveyModel.find()
   return surveys
 }
 
+/** Fetches the survey details via survey id */
 export const getSurveysById = async (surveyId:string) => {
   const surveys = await SurveyModel.findOne({id: surveyId}).exec()
   return surveys
 }
 
+/** Fetches the survey details created by the user*/
 export const getSurveysByUser = async (userId:string) => {
   const surveys = await SurveyModel.find({userId: userId}).exec()
   return surveys
 }
 
-export const getSurveyDetails = async (surveyId: string) => {
-  const surveys = await SurveyModel.find({id: surveyId})
-  return surveys
-}
-
+/** Main service to create a survey */
 export const createSurvey = async (data:Partial<Survey>) => {
   try {
 
@@ -71,6 +71,7 @@ export const createSurvey = async (data:Partial<Survey>) => {
   }
 }
 
+/** Updates the selected survey */
 export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
   let updatedSurvey = {
     ...data
@@ -79,6 +80,7 @@ export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
   return surveys
 }
 
+/** Removes the selected survey */
 export const removeSurvey = async (surveyId: string) => {
   const surveys = await SurveyModel.findOneAndRemove({id: surveyId})
   return surveys

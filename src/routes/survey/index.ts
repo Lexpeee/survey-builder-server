@@ -18,6 +18,7 @@ const surveyRoutes = () => {
    * SURVEY ROUTES
    */
 
+  /** ONLY USED IN DEVELOPMENT */
   router.get('/seed', async (req, res) => {
     try {
       await seedSurveys()
@@ -29,6 +30,7 @@ const surveyRoutes = () => {
     }
   })
 
+  /** Fetches a whole list of surveys */
   router.get('/', async (req, res) => {
     try {
       const surveys = await getSurveys()
@@ -40,6 +42,7 @@ const surveyRoutes = () => {
     }
   })
 
+  /** Fetches survey details */
   router.get('/:surveyId', async (req, res) => {
     try {
       const { surveyId } = req.params
@@ -51,6 +54,7 @@ const surveyRoutes = () => {
     }
   })
 
+  /** Fetches surveys by the selected user */
   router.get('/user/:userId', async (req, res) => {
     try {
       const { userId } = req.params
@@ -63,6 +67,7 @@ const surveyRoutes = () => {
     }
   })
 
+  /** Creates a new survey */
   router.post('/', async (req, res) => {
     try {
       const newSurvey = await createSurvey(req.body)
@@ -74,6 +79,7 @@ const surveyRoutes = () => {
     }
   })
 
+  /** Updates a selected survey */
   router.patch('/:surveyId', async (req, res) => {
     try {
       const { surveyId } = req.params
@@ -87,6 +93,7 @@ const surveyRoutes = () => {
     }
   })
 
+  /** removes a survey from the user */
   router.delete('/:surveyId', async (req, res) => {
     try {
       const { surveyId } = req.params
