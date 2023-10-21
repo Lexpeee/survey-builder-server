@@ -24,21 +24,42 @@ export const getSurveys = async () => {
   return surveys
 }
 
+const getSurveyAnswers = async (surveyId) => {
+  try {
+    const answers = await SurveyAnswersModel.find({surveyId: surveyId})
+    return answers
+  } catch (error) {
+    return error
+  }
+}
+
 /** Fetches the survey details via survey id */
-export const getSurveyById = async (surveyIdOrSlug:string) => {
+export const getSurveyById = async (surveyIdOrSlug:string, options: {
+  isComplete?: boolean,
+  showAnswers?: boolean
+} = null) => {
   try {
     const survey = await SurveyModel.findOne({$or: [
       { id: surveyIdOrSlug },
       { slug: surveyIdOrSlug },
     ]}).lean().exec()
-    if (survey?.id && survey?.fields?.length === 0){ 
-      const fields = await getSurveyFields(survey?.id)
-      
-      return {
-        ...survey,
-        fields
+
+    if (survey?.id) {
+
+      if (survey?.fields?.length === 0 && options?.isComplete){ 
+        const fields = await getSurveyFields(survey?.id)
+        survey.fields = fields
       }
+  
+      if (options?.showAnswers) {
+        const answers = await getSurveyAnswers(survey?.id)
+        // @ts-ignore
+        survey.answers = answers
+      }
+
     }
+    
+
     return survey
   } catch (error) {
     return error

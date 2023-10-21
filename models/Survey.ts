@@ -12,7 +12,11 @@ const SurveySchema = new mongoose.Schema({
   dateCreated: Date,
   dateRemoved: Date,
   displayImages: Array,
-  isVisible: Boolean
+  isVisible: Boolean,
+  answers: {
+    type: Array,
+    default: []
+  }
 })
 
 export const SurveyModel = mongoose.model('surveys', SurveySchema)

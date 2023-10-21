@@ -46,7 +46,11 @@ const surveyRoutes = () => {
   router.get('/:surveyIdOrSlug', async (req, res) => {
     try {
       const { surveyIdOrSlug } = req.params
-      const survey = await getSurveyById(surveyIdOrSlug)
+      const { isComplete, showAnswers } = req.query
+      const survey = await getSurveyById(surveyIdOrSlug, {
+        isComplete,
+        showAnswers
+      })
       res.status(200).json(survey)
       
     } catch (error) {
