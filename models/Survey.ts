@@ -3,8 +3,13 @@ import mongoose from 'mongoose'
 
 const SurveySchema = new mongoose.Schema({
   id: String, 
+  workspaceIds: Array, 
   userId: String, 
-  name: String, 
+  name: {
+    type:  String, 
+    required: true
+  }, 
+  description: String, 
   slug: String,
   fields: Array, 
   options: Object,
@@ -26,6 +31,7 @@ const SurveyFieldsSchema = new mongoose.Schema({
   order: Number, 
   surveyId: String, 
   question: String, 
+  description: String, 
   answer: String, 
   name: String, 
   placeholder: String, 
@@ -36,7 +42,8 @@ const SurveyFieldsSchema = new mongoose.Schema({
   isAnswerRequired: Boolean, 
   isFullScreen: Boolean, 
   isRequired: Boolean, 
-  isFieldLocked: Boolean
+  isFieldLocked: Boolean,
+  isAnswerReusable: Boolean
 })
 
 export const SurveyFieldsModel = mongoose.model('survey-fields', SurveyFieldsSchema)
