@@ -134,7 +134,12 @@ export const updateSurvey = async (surveyId:string, data:Partial<Survey>) => {
     }
     const surveys = await SurveyModel.findOneAndUpdate({id: surveyId}, updatedSurvey).exec()
 
-    return surveys
+    const updatedFields = await updateSurveyFields(fields)
+
+    return {
+      ...surveys,
+      updatedFields
+    }
 
   } catch (error) {
     return error
@@ -182,8 +187,10 @@ const updateSurveyFields = async (fields: any, isNew: boolean = false) => {
   try {
     if (!isNew) {
       fields?.forEach((field) => {
-        const isExisting = SurveyFieldsModel.find({id: field?.id})
+        const isExisting = !!(SurveyFieldsModel.find({id: field?.id}))
+
         if (isExisting) {
+          delete field["_id"]
           SurveyFieldsModel.findOneAndUpdate({id: field?.id}, field).exec()
           return
         }
